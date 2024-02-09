@@ -1,23 +1,30 @@
 import PySimpleGUI as sg
+#from code import Recomendations
+from itertools import islice
 
 #Current categories in database. If the categories changes, you must edit this list
 #----------------------------------------------------------------------------------
-categories=['Fantasy','Adventure','Comedy','Mystery','Family',
-                'Action','Crime','Sci-Fi','Triller']
+categories=['fantasy','adventure','comedy','mystery','family',
+                'action','crime','sci-fi','triller']
 
 
 #--------------------------------------
 #Functions that need to call the engine
 #--------------------------------------
 
-def Recomendations(categories):
-#This function manage the recomendations to the users
-    #Call the correspondig recomendation function
-    return []
+def RecomendationsGUI(categories_selected):
+    global categories
+    cat = categories if categories_selected==[] else categories_selected
+    #for i in Recomendations(cat):
+    for i in range(1,00):
+        yield Show(i)
 
 def Search(query,selected_categories):
 #this function manage the query made by the user
     #Call the corresponding query function
+    return []
+
+def Show(game):
     return []
 
 #------------------------------------------
@@ -69,7 +76,7 @@ layout = [
     [sg.Text("Your best videogames collection",font=('Arial',18))],
     [sg.Button('Filter',font=('Arial',14)),sg.Input(key='query',size=(35,2)),
     sg.Button('Search',font=('Arial',14))],#[sg.Text('',key='categories',visible=False)]
-] + Recomendations([])
+] + list(islice(RecomendationsGUI([]),10))
 
 window2 = sg.Window('VPN', layout, element_justification='c')
 
@@ -96,13 +103,13 @@ while True:
                 [sg.Button(category,font=('Arial',10),key=category)
                 for category in selected_categories]]
         ]
-        layout=layout+Recomendations(selected_categories)
+        layout=layout+list(islice(RecomendationsGUI(selected_categories),10))
         window2.close()
         window2=sg.Window('VPN', layout, element_justification='c')
         window2.Resizable = True
 
     if event == 'Search':
-        if values['query'] is '':
+        if values['query'] == '':
             continue
         layout = [
             [sg.Text('SR-GamesJJ', font=('Helvetica',50))],
