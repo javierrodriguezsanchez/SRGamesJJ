@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from itertools import islice
-from code import Recomendations
+from code import Recomendations,Download,Delete
 
 #Current categories in database. If the categories changes, you must edit this list
 #----------------------------------------------------------------------------------
@@ -26,17 +26,18 @@ def Show(game):
         [
             sg.Text('year: '),sg.Text(game['year']),
             sg.Text('rating: '),sg.Text(game['rating']),
-        ] + [sg.Button(cat) for cat in game['categories']]
+        ] + [sg.Button(cat,font=('Arial',10),disabled=True,disabled_button_color=('black','white')) 
+                for cat in game['categories']]
     ]
     
     if game['plot']!='':
         layout+=[[sg.Column([[
-            sg.Multiline(game['plot'],expand_x=True,size=(75,2),no_scrollbar=False),
-            sg.Button('Download',button_color='Green',key='Download'+game['name'])
+            sg.Multiline(game['plot'],expand_x=True,size=(75,3),no_scrollbar=False),
+            sg.Button('Download🔽',button_color='Green',key='Download\0'+game['name'])
         ]],justification='r',expand_x=True)]]
     
     else:
-        layout+=[[sg.Button('Download',button_color='Green',key='Download'+game['name'])]]
+        layout+=[[sg.Button('Download🔽',button_color='Green',key='Download\0'+game['name'])]]
     
     return [sg.Frame(game['name'],layout=layout,element_justification='c',expand_x=True)]
 
@@ -63,7 +64,7 @@ def SelectCategories():
         if event=='Select':
             accepted= [category for category in categories if values[category]]
             window2.close()
-            if accepted == [] or len(accepted)==len(categories):
+            if accepted == []:
                 return []
             return accepted
         
@@ -77,6 +78,14 @@ sg.set_options(font=('Arial Bold',18))
 
 #------------------------------------------
 
+def layout_base():
+    return [
+    [sg.Text('SR-GamesJJ', font=('Helvetica',50))],
+    [sg.Text("Your best videogames collection",font=('Arial',18))],
+    [sg.Button('Filter',font=('Arial',14)),sg.Input(key='query',size=(35,2)),
+    sg.Button('Search',font=('Arial',14))]
+]
+
 #-----------------------------------------------------------------------
 # ^   ^    ^    ===  ^   ¡     ===== .   . ^   ¡ ===== ===  /===\  ^   ¡
 # |\ /|   / \    |   | \ |     |     |   | | \ |   |    |   |   |  | \ |
@@ -84,14 +93,11 @@ sg.set_options(font=('Arial Bold',18))
 # !   ! /     \ ===  !   v     |      ===  !   v   !   ===  \===/  !   v
 #-----------------------------------------------------------------------
 
-layout = [
-    [sg.Text('SR-GamesJJ', font=('Helvetica',50))],
-    [sg.Text("Your best videogames collection",font=('Arial',18))],
-    [sg.Button('Filter',font=('Arial',14)),sg.Input(key='query',size=(35,2)),
-    sg.Button('Search',font=('Arial',14))],
+layout= layout_base()+ [
     [sg.Text('Recomended for You', font=('Helvetica',30),pad=3)],
     [sg.Column(list(islice(RecomendationsGUI([]),10)), scrollable=True, 
-               vertical_scroll_only=True, key='scrollable_area',expand_x=True)]]
+               vertical_scroll_only=True, key='scrollable_area',expand_x=True)]
+]
 
 screen_width, screen_height = sg.Window.get_screen_size()
 window2 = sg.Window('VPN', layout, element_justification='c',size=(screen_width*98//100, screen_height*9//10), grab_anywhere=True)
@@ -108,15 +114,12 @@ while True:
         if aux==None:
             continue
         selected_categories=aux
-        layout = [
-            [sg.Text('SR-GamesJJ', font=('Helvetica',50))],
-            [sg.Text("Your best videogames collection",font=('Arial',18))],
-            [sg.Button('Filter',font=('Arial',14)),sg.Input(key='query',size=(35,2)),
-            sg.Button('Search',font=('Arial',14))]]
+        layout = layout_base()
         if selected_categories != []:
             layout=layout+[
-            [[sg.Text('Categories:',font=('Arial',12),key='Categories:')]+
-                [sg.Button(category,font=('Arial',10),key=category)
+            [
+                [sg.Text('Categories:',font=('Arial',12),key='Categories:')]+
+                [sg.Button(category,font=('Arial',10),key=category, disabled=True,disabled_button_color=('black','white'))
                 for category in selected_categories]]
         ]
         layout=layout+[[sg.Column(list(islice(RecomendationsGUI(selected_categories),10)),
@@ -129,15 +132,11 @@ while True:
     if event == 'Search':
         if values['query'] == '':
             continue
-        layout = [
-            [sg.Text('SR-GamesJJ', font=('Helvetica',50))],
-            [sg.Text("Your best videogames collection",font=('Arial',18))],
-            [sg.Button('Filter',font=('Arial',14)),sg.Input(key='query',size=(35,2)),
-            sg.Button('Search',font=('Arial',14))]]
+        layout = layout_base()
         if selected_categories != []:
             layout=layout+[
-            [[sg.Text('Categories:',font=('Arial',12),key='Categories:')]+
-                [sg.Button(category,font=('Arial',10),key=category)
+            [[sg.Text('Categories:',font=('Arial',12))]+
+                [sg.Button(category,font=('Arial',10),key=category,disabled=True,disabled_button_color=('black','white'))
                 for category in selected_categories]]
         ]
         layout=layout+[[sg.Column(list(islice(Search(values['query'],selected_categories),10)),
@@ -146,4 +145,7 @@ while True:
         window2.close()
         window2=sg.Window('VPN', layout, element_justification='c')
         window2.Resizable = True
-        
+    if event.__contains__('Download'):
+        name=event.split('\0')[1]
+        Download(name)
+        window2[event].update(button_color='blue', text='Downloaded',disabled=True,disabled_button_color=('white','black'))
