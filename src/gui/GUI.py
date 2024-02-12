@@ -119,7 +119,7 @@ while True:
                 [sg.Button(category,font=('Arial',10),key=category)
                 for category in selected_categories]]
         ]
-        layout=layout+[[sg.Column(list(islice(RecomendationsGUI([]),10)),
+        layout=layout+[[sg.Column(list(islice(RecomendationsGUI(selected_categories),10)),
                    scrollable=True, vertical_scroll_only=True,
                    key='scrollable_area',expand_x=True)]]
         window2.close()

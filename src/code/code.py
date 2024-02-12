@@ -1,9 +1,11 @@
 import json
-#code
+import os
 
 def Recomendations(categories):
     Videogames =""
-    with open('../../data/videogames_edited.json','r') as data:
+    my_path=os.path.abspath(__file__)
+    path=my_path.replace('src/code/code.py','data/videogames_edited.json')
+    with open(path,'r') as data:
         for letter in data:    
             Videogames+=letter
     Videogames=json.loads(Videogames)
