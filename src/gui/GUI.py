@@ -1,13 +1,11 @@
 import PySimpleGUI as sg
 from itertools import islice
-from code import Recomendations,Download,Delete
+from code import Recomendations,Download
 
 #Current categories in database. If the categories changes, you must edit this list
 #----------------------------------------------------------------------------------
 categories=['fantasy','adventure','comedy','mystery','family',
-                'action','crime','sci-fi','triller']
-
-
+                'action','crime','sci-fi','thriller']
 #--------------------------------------
 #Functions that need to call the engine
 #--------------------------------------
@@ -33,11 +31,11 @@ def Show(game):
     if game['plot']!='':
         layout+=[[sg.Column([[
             sg.Multiline(game['plot'],expand_x=True,size=(75,3),no_scrollbar=False),
-            sg.Button('Download🔽',button_color='Green',key='Download\0'+game['name'])
+            sg.Button('Download🔽',button_color='Green',key='Download\0'+str(game))
         ]],justification='r',expand_x=True)]]
     
     else:
-        layout+=[[sg.Button('Download🔽',button_color='Green',key='Download\0'+game['name'])]]
+        layout+=[[sg.Button('Download🔽',button_color='Green',key='Download\0'+str(game))]]
     
     return [sg.Frame(game['name'],layout=layout,element_justification='c',expand_x=True)]
 
