@@ -64,7 +64,7 @@ class query_processor:
         index = gensim.similarities.MatrixSimilarity(doc_vector_repr)
                 
         similarities = index[self.vector_repr]
-        top_matches = sorted(enumerate(similarities), key=lambda x: -x[1])[:10]
+        top_matches = sorted(enumerate(similarities), key=lambda x: -x[1])
 
         best_match_indices = [match[0] for match in top_matches]
         return best_match_indices

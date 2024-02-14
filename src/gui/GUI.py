@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from itertools import islice
-from code import Recomendations,Download
+from code import Recomendations,Download,Search
 
 #Current categories in database. If the categories changes, you must edit this list
 #----------------------------------------------------------------------------------
@@ -14,10 +14,10 @@ def RecomendationsGUI(categories_selected):
     for i in Recomendations(categories_selected):
         yield Show(i)
 
-def Search(query,selected_categories):
+def SearchGUI(query,selected_categories):
 #this function manage the query made by the user
-    #Call the corresponding query function
-    return []
+    for i in Search(query,selected_categories):
+        yield Show(i)
 
 def Show(game):
     layout=[
@@ -137,7 +137,7 @@ while True:
                 [sg.Button(category,font=('Arial',10),key=category,disabled=True,disabled_button_color=('black','white'))
                 for category in selected_categories]]
         ]
-        layout=layout+[[sg.Column(list(islice(Search(values['query'],selected_categories),10)),
+        layout=layout+[[sg.Column(list(islice(SearchGUI(values['query'],selected_categories),10)),
                    scrollable=True, vertical_scroll_only=True,
                    key='scrollable_area',expand_x=True)]]
         window2.close()

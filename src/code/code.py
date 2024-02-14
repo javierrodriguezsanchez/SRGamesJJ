@@ -1,6 +1,7 @@
 import json
 import os
 import ast
+from query_processor import query_processor
 
 def init_DG():
     Videogames = ""
@@ -48,3 +49,18 @@ def Download(game):
     Videogames.append(ast.literal_eval(game))
     with open(path,'w') as data:
         json.dump(Videogames,data)
+
+def Search(query,categories):
+    Videogames = ""
+    my_path=os.path.abspath(__file__)
+    path=my_path.replace('code.py','videogames_edited.json')
+    with open(path,'r') as data:       
+        for letter in data:   
+            Videogames+=letter
+    Videogames=json.loads(Videogames)
+    results=query_processor(query=query).matched_docs()
+    for result in results:
+        game=Videogames[result]
+        if all([cat in game['categories'] for cat in categories]):
+            yield game
+    
