@@ -1,3 +1,6 @@
-from gui.GUI import GUI_run
+from gui.GUI import Gui_run
 
-GUI_run()
+categories=['fantasy','adventure','comedy','mystery','family',
+                'action','crime','sci-fi','thriller']
+
+Gui_run(categories)
