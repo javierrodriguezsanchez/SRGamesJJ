@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from itertools import islice
-from code import Recomendations,Download,Search
+from code.code import Recomendations,Download,Search
 
 #Current categories in database. If the categories changes, you must edit this list
 #----------------------------------------------------------------------------------
