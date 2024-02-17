@@ -46,7 +46,7 @@ class query_processor:
         self.tokenized_query = [word for word in self.tokenized_query if word in filtered_words]
         self.query_bow = dictionary.doc2bow(self.tokenized_query)
 
-    def vector_representation(self, use_bow=True):
+    def vector_representation(self, use_bow=False):
         corpus = []
         my_path=os.path.abspath(__file__)
 
