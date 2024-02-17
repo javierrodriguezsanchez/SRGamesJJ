@@ -1,12 +1,16 @@
 import json
 import os
 import ast
-from query_processor import query_processor
+from code.query_processor import query_processor
 
 def init_DG():
     Videogames = ""
     my_path=os.path.abspath(__file__)
-    path=my_path.replace('/src/code/code.py','data/Recomendations.json')
+    
+    # path=my_path.replace('/src/code/code.py','data/Recomendations.json')
+
+    path=my_path.replace('src\code\code.py','data\Recomendations.json')
+    
     with open(path,'r') as data:       
         for letter in data:   
             Videogames+=letter
@@ -23,7 +27,11 @@ def Recomendations(categories):
     DG,M=init_DG()
     Videogames =""
     my_path=os.path.abspath(__file__)
-    path=my_path.replace('src/code/code.py','data/videogames_edited.json')
+        
+    # path=my_path.replace('src/code/code.py','data/videogames_edited.json')
+
+    path=my_path.replace('src\code\code.py','data\\videogames_edited.json')
+    
     with open(path,'r') as data:
         for letter in data:    
             Videogames+=letter
@@ -41,7 +49,11 @@ def Similarity(game,M):
 def Download(game):
     Videogames = ""
     my_path=os.path.abspath(__file__)
-    path=my_path.replace('code.py','Recomendations.json')
+    
+    # path=my_path.replace('code.py','Recomendations.json')
+
+    path=my_path.replace('src\code\code.py','data\Recomendations.json')
+    
     with open(path,'r') as data:       
         for letter in data:   
             Videogames+=letter
@@ -53,7 +65,11 @@ def Download(game):
 def Search(query,categories):
     Videogames = ""
     my_path=os.path.abspath(__file__)
-    path=my_path.replace('code.py','videogames_edited.json')
+
+    # path=my_path.replace('code.py','videogames_edited.json')
+
+    path=my_path.replace('src\code\code.py','data\\videogames_edited.json')
+
     with open(path,'r') as data:       
         for letter in data:   
             Videogames+=letter
@@ -63,4 +79,3 @@ def Search(query,categories):
         game=Videogames[result]
         if all([cat in game['categories'] for cat in categories]):
             yield game
-    

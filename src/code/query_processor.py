@@ -1,6 +1,7 @@
 import nltk
 import gensim
 import json
+import os
 
 class query_processor:
     def __init__(self, query):
@@ -30,7 +31,13 @@ class query_processor:
 
     def filter_tokens_by_occurrence(self, no_below=5, no_above=0.5):
         tokenized_docs = []
-        with open('../../data/tokenized_docs.json', 'r') as file:
+        my_path=os.path.abspath(__file__)
+
+        # path=my_path.replace('src/code/query_processor.py','data//tokenized_docs.json')
+
+        path=my_path.replace('src\code\query_processor.py','data\\tokenized_docs.json')
+        
+        with open(path, 'r') as file:
             tokenized_docs = json.load(file)
         dictionary = gensim.corpora.Dictionary(tokenized_docs)
         dictionary.filter_extremes(no_below=no_below, no_above=no_above)
@@ -41,7 +48,13 @@ class query_processor:
 
     def vector_representation(self, use_bow=True):
         corpus = []
-        with open('../../data/corpus.json', 'r') as file:
+        my_path=os.path.abspath(__file__)
+
+        # path=my_path.replace('src/code/query_processor.py','data/corpus.json')
+
+        path=my_path.replace('src\code\query_processor.py','data\\corpus.json')
+        
+        with open(path, 'r') as file:
             corpus = json.load(file)
 
         if use_bow:
@@ -52,7 +65,13 @@ class query_processor:
 
     def matched_docs(self):
         doc_vector_repr = []
-        with open('../../data/vector_repr.json', 'r') as file:
+        my_path=os.path.abspath(__file__)
+
+        # path=my_path.replace('src/code/query_processor.py','data/vector_repr.json')
+
+        path=my_path.replace('src\code\query_processor.py','data\\vector_repr.json')
+        
+        with open(path, 'r') as file:
             doc_vector_repr = json.load(file)
         self.tokenization_nltk()
         self.remove_noise_nltk()
