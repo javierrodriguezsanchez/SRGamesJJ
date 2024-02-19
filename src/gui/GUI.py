@@ -128,12 +128,12 @@ def Gui_run(categories):
         if event == 'Search':
             if values['query'] == '':
                 continue
-            layout = layout_base()
+            layout = layout_base()+[[sg.Text('Results for: '+values['query'], font=('Helvetica',30),pad=3)]]
             if selected_categories != []:
                 layout=layout+[
                 [[sg.Text('Categories:',font=('Arial',12))]+
                     [sg.Button(category,font=('Arial',10),key=category,disabled=True,disabled_button_color=('black','white'))
-                    for category in selected_categories]]
+                    for category in selected_categories]],[sg.Text('Results of the search',font=('Helvetica',30),pad=3)]
             ]
             layout=layout+[[sg.Column(list(islice(SearchGUI(values['query'],selected_categories),10)),
                     scrollable=True, vertical_scroll_only=True,

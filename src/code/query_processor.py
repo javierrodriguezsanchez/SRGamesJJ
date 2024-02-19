@@ -4,11 +4,12 @@ import json
 import os
 
 class query_processor:
-    def __init__(self, query):
+    def __init__(self, query, sugestions=None):
         self.query = query
         self.tokenized_query = []
         self.vector_repr = []
         self.query_bow = []
+        self.sugestions=sugestions
 
     def tokenization_nltk(self):
         self.tokenized_query = nltk.tokenize.word_tokenize(self.query)
@@ -63,6 +64,15 @@ class query_processor:
             tfidf = gensim.models.TfidfModel(corpus)
             self.vector_repr = tfidf[self.query_bow]
 
+    def Recomend(self,info):
+        if self.sugestions is None:
+            return info[1] if info[1] is not None else 1
+        val=0
+        for cat in info[0]:
+            val+=self.sugestions[cat]
+        
+        return val if info[1] is not None else val
+
     def matched_docs(self):
         doc_vector_repr = []
         my_path=os.path.abspath(__file__)
@@ -80,11 +90,19 @@ class query_processor:
         self.filter_tokens_by_occurrence()
         self.vector_representation()
 
+        my_path=os.path.abspath(__file__)
+
+        # path=my_path.replace('src/code/query_processor.py','data/vector_repr.json')
+
+        path=my_path.replace('src\code\query_processor.py','data\\videogames_edited.json')
+        with open(path, 'r') as file:
+            categories = json.load(file)
+        info=[(x['categories'],x['rating']) for x in categories]
+
         index = gensim.similarities.MatrixSimilarity(doc_vector_repr)
                 
         similarities = index[self.vector_repr]
-        top_matches = sorted(enumerate(similarities), key=lambda x: -x[1])
+        top_matches = sorted(enumerate(similarities), key=lambda x: -x[1]*self.Recomend(info[x[0]]))
 
         best_match_indices = [match[0] for match in top_matches]
         return best_match_indices
-        

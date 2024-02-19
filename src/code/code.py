@@ -15,8 +15,8 @@ def init_DG():
         for letter in data:   
             Videogames+=letter
     Videogames=json.loads(Videogames)
-    categories={'fantasy':0,'adventure':0,'comedy':0,'mystery':0,'family':0,
-                'action':0,'crime':0,'sci-fi':0,'thriller':0}
+    categories={'fantasy':1,'adventure':1,'comedy':1,'mystery':1,'family':1,
+                'action':1,'crime':1,'sci-fi':1,'thriller':1}
     for x in Videogames:
         for cat in x['categories']:
             categories[cat]+=1
@@ -25,22 +25,10 @@ def init_DG():
 
 def Recomendations(categories):
     DG,M=init_DG()
-    Videogames =""
-    my_path=os.path.abspath(__file__)
-        
-    # path=my_path.replace('src/code/code.py','data/videogames_edited.json')
+    query=' '.join(DG)
+    return Search(query,categories,M)
 
-    path=my_path.replace('src\code\code.py','data\\videogames_edited.json')
-    
-    with open(path,'r') as data:
-        for letter in data:    
-            Videogames+=letter
-    Videogames=json.loads(Videogames)
-    results=[game for game in Videogames if all([cat in game['categories']
-        for cat in categories]) and game['name'] not in DG]
-    return sorted(results,key=lambda x:Similarity(x,M),reverse=True)
-
-def Similarity(game,M):
+def Similarity(game,M,DG):
     a=0
     for cat in game['categories']:
         a+=M[cat]
@@ -62,7 +50,7 @@ def Download(game):
     with open(path,'w') as data:
         json.dump(Videogames,data)
 
-def Search(query,categories):
+def Search(query,categories, sugestions=None):
     Videogames = ""
     my_path=os.path.abspath(__file__)
 
@@ -74,7 +62,7 @@ def Search(query,categories):
         for letter in data:   
             Videogames+=letter
     Videogames=json.loads(Videogames)
-    results=query_processor(query=query).matched_docs()
+    results=query_processor(query=query,sugestions=sugestions).matched_docs()
     for result in results:
         game=Videogames[result]
         if all([cat in game['categories'] for cat in categories]):
