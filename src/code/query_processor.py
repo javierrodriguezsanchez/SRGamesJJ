@@ -71,7 +71,7 @@ class query_processor:
         for cat in info[0]:
             val+=self.sugestions[cat]
         
-        return val if info[1] is not None else val
+        return val*info[1] if info[1] is not None else val
 
     def matched_docs(self):
         doc_vector_repr = []
@@ -102,7 +102,7 @@ class query_processor:
         index = gensim.similarities.MatrixSimilarity(doc_vector_repr)
                 
         similarities = index[self.vector_repr]
-        top_matches = sorted(enumerate(similarities), key=lambda x: -x[1]*self.Recomend(info[x[0]]))
+        top_matches = sorted(enumerate(similarities), key=lambda x: -(x[1]+1e-8)*self.Recomend(info[x[0]]))
 
         best_match_indices = [match[0] for match in top_matches]
         return best_match_indices
