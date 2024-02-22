@@ -3,6 +3,7 @@ import gensim
 import json
 import os
 
+#This class 
 class query_processor:
     def __init__(self, query, sugestions=None):
         self.query = query
@@ -12,16 +13,20 @@ class query_processor:
         self.sugestions=sugestions
 
     def tokenization_nltk(self):
+        #Tokenize the query using NLTK
         self.tokenized_query = nltk.tokenize.word_tokenize(self.query)
 
     def remove_noise_nltk(self):
+        #Remove noise from the tokenized query using NLTK
         self.tokenized_query = [word.lower() for word in self.tokenized_query if word.isalpha()]
 
     def remove_stopwords(self):
+        #Remove stopwords from the tokenized query
         stop_words = set(nltk.corpus.stopwords.words('english'))
         self.tokenized_query = [word for word in self.tokenized_query if word not in stop_words]
 
     def morphological_reduction_nltk(self, use_lemmatization=True):
+        # Perform morphological reduction (lemmatization or stemming) using NLTK
         if use_lemmatization:
             lemmatizer = nltk.stem.WordNetLemmatizer()
             self.tokenized_query = [lemmatizer.lemmatize(word) for word in self.tokenized_query]
@@ -31,10 +36,9 @@ class query_processor:
             self.tokenized_query = [stemmer.stem(word) for word in self.tokenized_query]
 
     def filter_tokens_by_occurrence(self, no_below=5, no_above=0.5):
+        #Filter tokens by their occurrence in the corpus
         tokenized_docs = []
         my_path=os.path.abspath(__file__)
-
-        # path=my_path.replace('src/code/query_processor.py','data//tokenized_docs.json')
 
         path=my_path.replace('src\code\query_processor.py','data\\tokenized_docs.json')
         
@@ -48,10 +52,9 @@ class query_processor:
         self.query_bow = dictionary.doc2bow(self.tokenized_query)
 
     def vector_representation(self, use_bow=False):
+        #Generate vector representation of the query
         corpus = []
         my_path=os.path.abspath(__file__)
-
-        # path=my_path.replace('src/code/query_processor.py','data/corpus.json')
 
         path=my_path.replace('src\code\query_processor.py','data\\corpus.json')
         
@@ -65,6 +68,7 @@ class query_processor:
             self.vector_repr = tfidf[self.query_bow]
 
     def Recomend(self,info):
+        #Calculate recommendation score based on suggestions
         if self.sugestions is None:
             return info[1] if info[1] is not None else 1
         val=0
@@ -74,10 +78,9 @@ class query_processor:
         return val*info[1] if info[1] is not None else val
 
     def matched_docs(self):
+        #Find matched documents based on the query
         doc_vector_repr = []
         my_path=os.path.abspath(__file__)
-
-        # path=my_path.replace('src/code/query_processor.py','data/vector_repr.json')
 
         path=my_path.replace('src\code\query_processor.py','data\\vector_repr.json')
         
@@ -91,8 +94,6 @@ class query_processor:
         self.vector_representation()
 
         my_path=os.path.abspath(__file__)
-
-        # path=my_path.replace('src/code/query_processor.py','data/vector_repr.json')
 
         path=my_path.replace('src\code\query_processor.py','data\\videogames_edited.json')
         with open(path, 'r') as file:
