@@ -6,7 +6,7 @@
 
 ### IRS model definition:
 
-This poject is a videogame recomendation system made in python, using the Generalized vector space model for search and recomend the products listed, with a gui implemented with the PySimpleGUI python library.
+This poject is a videogame recomendation system made in python, using the clasic vector space model for search and recomend the products listed, with a gui implemented with the PySimpleGUI python library.
 
 ### Considerations made in the implementation
 - The interface will only return the top 10 best matches.

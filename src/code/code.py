@@ -33,7 +33,6 @@ def init_DG():
 def Recomendations(categories):
     # This function returns recommended games based on the given categories
     DG,M=init_DG()
-    DG,M=init_DG()
     query=' '.join(DG)#creating a query with all the names of the games
     return Search(query,categories,M)
 
